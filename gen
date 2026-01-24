@@ -1,0 +1,61 @@
+class Donor:
+    def __init__(self, name, age, blood_type):
+        self.name = name
+        self.age = age
+        self.blood_type = blood_type
+
+class BloodBank:
+    def __init__(self):
+        self.donors = []
+        self.inventory = {}
+
+    def add_donor(self, donor):
+        self.donors.append(donor)
+        self.inventory[donor.blood_type] = self.inventory.get(donor.blood_type, 0) + 1
+
+    def find_donors(self, blood_type):
+        return [d for d in self.donors if d.blood_type == blood_type]
+
+    def request_blood(self, blood_type):
+        if self.inventory.get(blood_type, 0) > 0:
+            self.inventory[blood_type] -= 1
+            return True
+        return False
+
+def main():
+    bank = BloodBank()
+    while True:
+        print("\nBlood Donation System")
+        print("1. Register Donor")
+        print("2. Request Blood")
+        print("3. List Donors by Blood Type")
+        print("4. Exit")
+        choice = input("Enter choice: ")
+        if choice == '1':
+            name = input("Donor Name: ")
+            age = int(input("Donor Age: "))
+            blood_type = input("Blood Type: ").upper()
+            donor = Donor(name, age, blood_type)
+            bank.add_donor(donor)
+            print("Donor registered.")
+        elif choice == '2':
+            blood_type = input("Requested Blood Type: ").upper()
+            if bank.request_blood(blood_type):
+                print("Blood provided.")
+            else:
+                print("Requested blood type not available.")
+        elif choice == '3':
+            blood_type = input("Blood Type to search: ").upper()
+            donors = bank.find_donors(blood_type)
+            if donors:
+                for d in donors:
+                    print(f"{d.name}, Age: {d.age}, Blood Type: {d.blood_type}")
+            else:
+                print("No donors found for this blood type.")
+        elif choice == '4':
+            break
+        else:
+            print("Invalid choice.")
+
+if __name__ == "__main__":
+    main()
